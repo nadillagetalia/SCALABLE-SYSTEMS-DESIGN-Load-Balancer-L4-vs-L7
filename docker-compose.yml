@@ -1,0 +1,32 @@
+services:
+
+  backend1:
+    build: ./backend1
+
+  backend2:
+    build: ./backend2
+
+  backend3:
+    build: ./backend3
+
+  loadbalancer:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./loadbalancer/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
+
+  haproxy:
+    image: haproxy:latest
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    depends_on:
+      - backend1
+      - backend2
+      - backend3
